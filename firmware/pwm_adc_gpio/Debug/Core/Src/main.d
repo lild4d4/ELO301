@@ -35,7 +35,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/adc.h ../Core/Inc/main.h ../Core/Inc/tim.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h ../Core/Inc/device.h \
  ../Core/Inc/gpio_if.h ../Core/Inc/gpio.h ../Core/Inc/dip_switch.h \
- ../Core/Inc/gpio_if.h
+ ../Core/Inc/gpio_if.h ../Core/Inc/command_decoder.h ../Core/Inc/device.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -80,3 +80,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/gpio.h:
 ../Core/Inc/dip_switch.h:
 ../Core/Inc/gpio_if.h:
+../Core/Inc/command_decoder.h:
+../Core/Inc/device.h:

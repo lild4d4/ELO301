@@ -1,4 +1,5 @@
 "./Core/Src/adc.o"
+"./Core/Src/command_decoder.o"
 "./Core/Src/device.o"
 "./Core/Src/dip_switch.o"
 "./Core/Src/gpio.o"
@@ -33,4 +34,3 @@
 "./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o"
 "./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o"
 "./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.o"
-"./middlewares/command_decoder.o"

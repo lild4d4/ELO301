@@ -28,6 +28,7 @@
 #include "device.h"
 #include "gpio_if.h"
 #include "dip_switch.h"
+#include "command_decoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -133,10 +134,11 @@ int main(void)
       Error_Handler();
     }
 
-  int val;
+
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
-  val = get_dip_value(&this_dip);
-  device_if_init(&this_device, MASTER, 2);
+  int dip_value = get_dip_value(&this_dip);
+  device_if_init(&this_device, dip_value);
+  int command = decode_pc_command(&this_device);
 
   while (1)
   {

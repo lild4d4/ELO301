@@ -8,8 +8,15 @@
 #include <stdlib.h>
 #include "device.h"
 
-void device_if_init( device *device_gc, mode_types set_mode, int set_id)
+void device_if_init( device *device_gc, int set_id)
 {
-	device_gc->modo = set_mode;
+	if(set_id==0)
+	{
+		device_gc->modo = MASTER;
+	}
+	else
+	{
+		device_gc->modo = SLAVE;
+	}
 	device_gc->id = set_id;
 }
