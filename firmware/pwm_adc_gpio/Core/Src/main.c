@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t pwm_val;			// volatile?
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -112,6 +112,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm
+  HAL_UART_Receive_IT(&huart2, &pwm_val, 1);		// inicializacion interrupciones UART2
 
   gpio_if_init(&switch_1, ACTIVE_HIGH, &user_switch1_pin, GPIO_IF_INPUT);
   if (gpio_if_open(&switch_1) != GPIO_IF_SUCCESS)
@@ -199,6 +202,20 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// rutina de interrupcion por UART
+
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == USART2)
+	{
+		// sdkjfsdfjk aqui convertir valor 8 bits a valor entre 0 y 1960.
+		uint16_t dc_pwm = pwm_val;
+		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);		// setea el valor del PWM
+	}
+	HAL_UART_Receive_IT(&huart2, &pwm_val, 1);
+}
+
 
 /* USER CODE END 4 */
 
