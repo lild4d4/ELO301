@@ -52,7 +52,9 @@ uint8_t pwm_val;			// volatile?
 uint8_t uart_pc;
 uint8_t uart_red;
 
-device *this_device;
+device this_device;
+mode_types device_mode;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,6 +123,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm
 
   HAL_UART_Receive_IT(&huart2, &uart_pc, 1);		// inicializacion interrupciones UART2
@@ -149,8 +152,8 @@ int main(void)
 
 
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
-  int dip_value = get_dip_value(&this_dip);
-  device_if_init(this_device, dip_value);
+  int dip_value = 5;//get_dip_value(&this_dip);
+  device_if_init(&this_device, dip_value);
 
   while (1)
   {
@@ -219,7 +222,7 @@ uint8_t dato_2;
 void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 {
 	static uint8_t cont = 1;
-	mode_types device_mode = this_device->modo;
+	device_mode = this_device.modo;
 
 	if(huart->Instance == USART2)
 	{
@@ -239,7 +242,7 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 		}
 	}
 
-	if ( device_mode == MASTER)
+	if (device_mode == MASTER)
 	{
 		int command = decode_pc_command(&this_device, dato_1, dato_2);
 	}
