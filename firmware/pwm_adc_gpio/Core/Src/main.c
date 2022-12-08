@@ -52,7 +52,7 @@ uint8_t pwm_val;			// volatile?
 uint8_t uart_pc;
 uint8_t uart_red;
 
-volatile device this_device;
+device *this_device;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -150,7 +150,7 @@ int main(void)
 
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
   int dip_value = get_dip_value(&this_dip);
-  device_if_init(&this_device, dip_value);
+  device_if_init(this_device, dip_value);
 
   while (1)
   {
@@ -219,6 +219,7 @@ uint8_t dato_2;
 void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 {
 	static uint8_t cont = 1;
+	mode_types device_mode = this_device->modo;
 
 	if(huart->Instance == USART2)
 	{
@@ -238,7 +239,7 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 		}
 	}
 
-	if ( (this_device->modo) == MASTER)
+	if ( device_mode == MASTER)
 	{
 		int command = decode_pc_command(&this_device, dato_1, dato_2);
 	}

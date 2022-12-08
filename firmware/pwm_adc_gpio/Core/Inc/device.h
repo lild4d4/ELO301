@@ -29,6 +29,6 @@ typedef struct
  * @param pin Pointer to pin data structure
  * @param initial_state State of the pin after init
  */
-void device_if_init( device *device_gc, int id);
+void device_if_init( device *device_gc, int set_id);
 
 #endif /* DEVICE_H_ */
