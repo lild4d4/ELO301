@@ -8,9 +8,10 @@
 #ifndef COMMAND_DECODER_H_
 #define COMMAND_DECODER_H_
 
+#include "stdint.h"
 #include "device.h"
 
-int decode_pc_command(device *dev);
-int decode_red_command(device *dev, int red_command);
+int decode_pc_command(device *dev, uint8_t pc_command_1, uint8_t pc_command_2);
+int decode_red_command(device *dev, int red_command_1, int red_command_2);
 
 #endif /* COMMAND_DECODER_H_ */

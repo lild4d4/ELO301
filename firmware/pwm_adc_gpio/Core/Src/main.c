@@ -49,6 +49,10 @@
 
 /* USER CODE BEGIN PV */
 uint8_t pwm_val;			// volatile?
+uint8_t uart_pc;
+uint8_t uart_red;
+
+volatile device this_device;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,7 +74,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	/*Incializacion de switches*/
+	/*pines de switches*/
 	t_gpio_pin user_switch1_pin = {SW1_GPIO_Port, SW1_Pin};
 	t_gpio_if switch_1;
 	t_gpio_pin user_switch2_pin = {SW2_GPIO_Port, SW2_Pin};
@@ -80,7 +84,10 @@ int main(void)
 	t_gpio_pin user_switch4_pin = {SW4_GPIO_Port, SW4_Pin};
 	t_gpio_if switch_4;
 
-	device this_device;
+	/*Device*/
+	//device this_device;
+
+	/*Dip Switch*/
 	dip_switch this_dip;
 
   /* USER CODE END 1 */
@@ -106,6 +113,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -114,7 +122,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm
-  HAL_UART_Receive_IT(&huart2, &pwm_val, 1);		// inicializacion interrupciones UART2
+
+  HAL_UART_Receive_IT(&huart2, &uart_pc, 1);		// inicializacion interrupciones UART2
+  HAL_UART_Transmit_IT(&huart1, &uart_red, 1);		// inicializacion interrupciones UART1
 
   gpio_if_init(&switch_1, ACTIVE_HIGH, &user_switch1_pin, GPIO_IF_INPUT);
   if (gpio_if_open(&switch_1) != GPIO_IF_SUCCESS)
@@ -141,7 +151,6 @@ int main(void)
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
   int dip_value = get_dip_value(&this_dip);
   device_if_init(&this_device, dip_value);
-  int command = decode_pc_command(&this_device);
 
   while (1)
   {
@@ -204,16 +213,47 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 // rutina de interrupcion por UART
+uint8_t dato_1;
+uint8_t dato_2;
 
 void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 {
+	static uint8_t cont = 1;
+
 	if(huart->Instance == USART2)
 	{
 		// sdkjfsdfjk aqui convertir valor 8 bits a valor entre 0 y 1960.
-		uint16_t dc_pwm = pwm_val;
-		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);		// setea el valor del PWM
+		// uint16_t dc_pwm = pwm_val;
+		// __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);		// setea el valor del PWM
+
+		if (cont == 1)
+		{
+			dato_1 = uart_pc;
+			cont = 2;
+		}
+		else if (cont == 2)
+		{
+			dato_2 = uart_pc;
+			cont = 1;
+		}
 	}
-	HAL_UART_Receive_IT(&huart2, &pwm_val, 1);
+
+	if ( (this_device->modo) == MASTER)
+	{
+		int command = decode_pc_command(&this_device, dato_1, dato_2);
+	}
+
+	HAL_UART_Receive_IT(&huart2, &uart_pc, 1);
+}
+
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == USART1)
+	{
+		// alo sans
+
+	}
 }
 
 
