@@ -48,12 +48,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t pwm_val;			// volatile?
 uint8_t uart_pc;
-uint8_t uart_red;
-
 device this_device;
 mode_types device_mode;
+uint8_t uart_red;
+static uint8_t cont_tim = 0;
 
 /* USER CODE END PV */
 
@@ -116,6 +115,7 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -124,10 +124,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
 
+
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm
 
   HAL_UART_Receive_IT(&huart2, &uart_pc, 1);		// inicializacion interrupciones UART2
-  HAL_UART_Transmit_IT(&huart1, &uart_red, 1);		// inicializacion interrupciones UART1
+  HAL_UART_Receive_IT(&huart1, &uart_red, 1);		// inicializacion interrupciones UART1
 
   gpio_if_init(&switch_1, ACTIVE_HIGH, &user_switch1_pin, GPIO_IF_INPUT);
   if (gpio_if_open(&switch_1) != GPIO_IF_SUCCESS)
@@ -150,9 +151,10 @@ int main(void)
       Error_Handler();
     }
 
+  HAL_ADC_Init(&hadc1);
 
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
-  int dip_value = 5;//get_dip_value(&this_dip);
+  int dip_value = get_dip_value(&this_dip);
   device_if_init(&this_device, dip_value);
 
   while (1)
@@ -224,12 +226,10 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 	static uint8_t cont = 1;
 	device_mode = this_device.modo;
 
+
+	// Modo MASTER
 	if(huart->Instance == USART2)
 	{
-		// sdkjfsdfjk aqui convertir valor 8 bits a valor entre 0 y 1960.
-		// uint16_t dc_pwm = pwm_val;
-		// __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);		// setea el valor del PWM
-
 		if (cont == 1)
 		{
 			dato_1 = uart_pc;
@@ -239,27 +239,56 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 		{
 			dato_2 = uart_pc;
 			cont = 1;
+			if (device_mode == MASTER)
+			{
+				int command = decode_pc_command(&this_device, dato_1, dato_2);
+			}
 		}
 	}
 
-	if (device_mode == MASTER)
+	// Modo SLAVE
+	if(huart->Instance == USART1)
 	{
-		int command = decode_pc_command(&this_device, dato_1, dato_2);
+		if (device_mode == MASTER)
+		{
+			HAL_UART_Transmit(&huart2, &uart_red, 1, 100);
+			HAL_TIM_Base_Stop_IT(&htim2);
+		}
+		else
+		{
+			if (cont == 1)
+			{
+				dato_1 = uart_red;
+				cont = 2;
+			}
+			else if (cont == 2)
+			{
+				dato_2 = uart_red;
+				cont = 1;
+				if (device_mode == SLAVE)
+				{
+					int command = decode_red_command(&this_device, dato_1, dato_2);
+				}
+			}
+		}
 	}
 
 	HAL_UART_Receive_IT(&huart2, &uart_pc, 1);
+	HAL_UART_Receive_IT(&huart1, &uart_red, 1);
 }
 
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if(huart->Instance == USART1)
+	if (cont_tim == 1) {
+		HAL_UART_Transmit(&huart2, '1', 1, 100);
+		HAL_TIM_Base_Stop_IT(&htim2);
+	}
+	else
 	{
-		// alo sans
-
+		cont_tim = 1;
 	}
 }
-
 
 /* USER CODE END 4 */
 

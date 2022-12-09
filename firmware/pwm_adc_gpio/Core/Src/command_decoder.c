@@ -10,42 +10,61 @@
 #include "command_decoder.h"
 #include "device.h"
 #include "usart.h"
+#include "adc.h"
+#include "tim.h"
 
 /*- COMANDOS ---------------------------------------------------------*/
 #define READ_POT 1;
 #define WRITE_LED 2;
 
+extern uint8_t uart_red;
+uint8_t counter;
+
 int decode_pc_command(device *dev, uint8_t command_1, uint8_t command_2)
 {
+
 	if(dev->modo==SLAVE)
 	{
 		return -1;
 	}
 	else
 	{
-		HAL_UART_Transmit_IT(&huart1, &command_1, 1);
-		HAL_UART_Transmit_IT(&huart1, &command_2, 1);
+		HAL_UART_Transmit(&huart1, &command_1, 1, 1000);
+		HAL_UART_Transmit(&huart1, &command_2, 1, 1000);
+
+		//HAL_UART_Receive(&huart1, &uart_red, 1, 5000);
+ 		HAL_TIM_Base_Start_IT(&htim2);
+
 		return 0;
 	}
 }
 
-int decode_red_command(device *dev, int red_command_1, int red_command_2)
+int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2)
 {
 	if(dev->modo==MASTER)
 	{
-		return -1;
+		HAL_UART_Transmit(&huart1, &red_command_1, 1, 1000);
+		HAL_UART_Transmit(&huart1, &red_command_2, 1, 1000);
 	}
 	else
 	{
-		if( (0b00001111) & (red_command_1 == dev->id) )
+		// chequear si es el ID correcto
+		if( (0b00001111 & red_command_1) == dev->id )
 		{
-			if(red_command_2==0)
+			if(red_command_1>>7 == 0 )
 			{
-				//read pot
+				HAL_ADC_Start(&hadc1);
+				HAL_ADC_PollForConversion(&hadc1, 100);
+
+				uint8_t adc_val = ( (double) HAL_ADC_GetValue(&hadc1) ) /4096 * 100;
+
+				HAL_UART_Transmit(&huart1, &adc_val, 1, 1000);
+
 			}
 			else
 			{
-				//write led
+				uint16_t dc_pwm = (float)red_command_2/127 * 1960;
+				__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);
 			}
 		}
 		else
@@ -54,3 +73,29 @@ int decode_red_command(device *dev, int red_command_1, int red_command_2)
 		}
 	}
 }
+
+
+
+/* https://visualgdb.com/tutorials/arm/stm32/timers/hal/ */
+
+
+
+/* 		HAL_TIM_Base_Start_IT(&htim2);
+
+		while (counter < 20)
+		{
+			if ()
+			{
+				//
+				break;
+			}
+
+			if (__HAL_TIM_GET_FLAG(&htim2, TIM_FLAG_UPDATE) == SET)
+			{
+				__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+				counter++;
+			}
+
+		}
+		HAL_TIM_Base_Stop_IT(&htim2);
+*/
