@@ -65,6 +65,8 @@ int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2
 			{
 				uint16_t dc_pwm = (float)red_command_2/127 * 1960;
 				__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);
+				HAL_UART_Transmit(&huart1, &dc_pwm, 1, 1000);
+
 			}
 		}
 		else

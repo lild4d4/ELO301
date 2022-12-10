@@ -278,6 +278,13 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 }
 
 
+/*void HAL_UART_TxCpltCallback (UART_HandleTypeDef *huart)
+{
+	HAL_UART_Transmit_IT(&huart1, &uart_red, 1);
+}*/
+
+
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (cont_tim == 1) {
