@@ -50,6 +50,7 @@
 /* USER CODE BEGIN PV */
 uint8_t uart_pc;
 device this_device;
+transmisor_receptor_red t_r_red;
 mode_types device_mode;
 uint8_t uart_red;
 static uint8_t cont_tim = 0;
@@ -156,6 +157,8 @@ int main(void)
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
   int dip_value = get_dip_value(&this_dip);
   device_if_init(&this_device, dip_value);
+
+  trans_recep_init(&t_r_red, &huart1);
 
   while (1)
   {

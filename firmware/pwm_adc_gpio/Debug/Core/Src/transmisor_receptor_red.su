@@ -1,0 +1,2 @@
+../Core/Src/transmisor_receptor_red.c:12:6:trans_recep_init	16	static
+../Core/Src/transmisor_receptor_red.c:17:6:send	24	static

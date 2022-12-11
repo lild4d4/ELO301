@@ -11,6 +11,7 @@
 #include "stdint.h"
 #include "device.h"
 #include "potenciometro.h"
+#include "transmisor_receptor_red.h"
 
 int decode_pc_command(device *dev, uint8_t pc_command_1, uint8_t pc_command_2);
 int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2);
