@@ -53,10 +53,10 @@ int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2
 		{
 			if(red_command_1>>7 == 0 )
 			{
-				HAL_ADC_Start(&hadc1);
-				HAL_ADC_PollForConversion(&hadc1, 100);
-
-				uint8_t adc_val = ( (double) HAL_ADC_GetValue(&hadc1) ) /4096 * 100;
+				potenciometro pot;
+				potenciometro_init(&pot, &hadc1); //HAL_ADC_Start(&hadc1);
+				uint8_t adc_val = potenciometro_get_value(&pot); //HAL_ADC_PollForConversion(&hadc1, 100);
+				//uint8_t adc_val = ( (double) HAL_ADC_GetValue(&hadc1) ) /4096 * 100;
 
 				HAL_UART_Transmit(&huart1, &adc_val, 1, 1000);
 
