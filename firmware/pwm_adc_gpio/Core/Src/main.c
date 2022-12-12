@@ -29,6 +29,7 @@
 #include "gpio_if.h"
 #include "dip_switch.h"
 #include "command_decoder.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,10 +51,13 @@
 /* USER CODE BEGIN PV */
 uint8_t uart_pc;
 device this_device;
+potenciometro pot;
 transmisor_receptor_red t_r_red;
 mode_types device_mode;
 uint8_t uart_red;
 static uint8_t cont_tim = 0;
+
+led this_led;
 
 /* USER CODE END PV */
 
@@ -126,7 +130,8 @@ int main(void)
 
 
 
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm'
+  led_init(&this_led, &htim1);
 
   HAL_UART_Receive_IT(&huart2, &uart_pc, 1);		// inicializacion interrupciones UART2
   HAL_UART_Receive_IT(&huart1, &uart_red, 1);		// inicializacion interrupciones UART1
@@ -154,11 +159,13 @@ int main(void)
 
   HAL_ADC_Init(&hadc1);
 
+
+  trans_recep_init(&t_r_red, &huart1);
+
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
   int dip_value = get_dip_value(&this_dip);
   device_if_init(&this_device, dip_value);
 
-  trans_recep_init(&t_r_red, &huart1);
 
   while (1)
   {

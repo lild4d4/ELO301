@@ -35,7 +35,8 @@ Core/Src/command_decoder.o: ../Core/Src/command_decoder.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  ../Core/Inc/transmisor_receptor_red.h ../Core/Inc/device.h \
- ../Core/Inc/usart.h ../Core/Inc/adc.h ../Core/Inc/tim.h
+ ../Core/Inc/usart.h ../Core/Inc/adc.h ../Core/Inc/tim.h \
+ ../Core/Inc/led.h ../Core/Inc/tim.h
 ../Core/Inc/command_decoder.h:
 ../Core/Inc/device.h:
 ../Core/Inc/potenciometro.h:
@@ -78,4 +79,6 @@ Core/Src/command_decoder.o: ../Core/Src/command_decoder.c \
 ../Core/Inc/device.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/adc.h:
+../Core/Inc/tim.h:
+../Core/Inc/led.h:
 ../Core/Inc/tim.h:

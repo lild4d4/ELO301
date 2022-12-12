@@ -12,6 +12,7 @@
 #include "usart.h"
 #include "adc.h"
 #include "tim.h"
+#include "led.h"
 
 /*- COMANDOS ---------------------------------------------------------*/
 #define READ_POT 1;
@@ -19,6 +20,8 @@
 
 extern uint8_t uart_red;
 extern transmisor_receptor_red t_r_red;
+extern led this_led;
+extern potenciometro pot;
 uint8_t counter;
 
 int decode_pc_command(device *dev, uint8_t command_1, uint8_t command_2)
@@ -30,15 +33,8 @@ int decode_pc_command(device *dev, uint8_t command_1, uint8_t command_2)
 	}
 	else
 	{
-
-
 		send(&t_r_red, &command_1, &command_2);
-		//HAL_UART_Transmit(&huart1, &command_1, 1, 1000);
-		//HAL_UART_Transmit(&huart1, &command_2, 1, 1000);
-
-		//HAL_UART_Receive(&huart1, &uart_red, 1, 5000);
  		HAL_TIM_Base_Start_IT(&htim2);
-
 		return 0;
 	}
 }
@@ -57,19 +53,16 @@ int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2
 		{
 			if(red_command_1>>7 == 0 )
 			{
-				potenciometro pot;
-				potenciometro_init(&pot, &hadc1);
+				potenciometro_init(&pot, &hadc1);	// solo funciona si se realiza la inicializacion siempre, ni idea
 				uint8_t adc_val = potenciometro_get_value(&pot);
-
-				HAL_UART_Transmit(&huart1, &adc_val, 1, 1000);
-
+				int cero = 0;
+				send(&t_r_red, &cero, &adc_val); //HAL_UART_Transmit(&huart1, &adc_val, 1, 1000);
 			}
 			else
 			{
 				uint16_t dc_pwm = (float)red_command_2/127 * 1960;
-				__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dc_pwm);
+				led_set(&this_led, dc_pwm);
 				HAL_UART_Transmit(&huart1, &dc_pwm, 1, 1000);
-
 			}
 		}
 		else
