@@ -134,7 +134,7 @@ int main(void)
   led_init(&this_led, &htim1);
 
   HAL_UART_Receive_IT(&huart2, &uart_pc, 1);		// inicializacion interrupciones UART2
-  HAL_UART_Receive_IT(&huart1, &uart_red, 1);		// inicializacion interrupciones UART1
+  HAL_UART_Receive_IT(&huart4, &uart_red, 1);		// inicializacion interrupciones UART1
 
   gpio_if_init(&switch_1, ACTIVE_HIGH, &user_switch1_pin, GPIO_IF_INPUT);
   if (gpio_if_open(&switch_1) != GPIO_IF_SUCCESS)
@@ -160,7 +160,7 @@ int main(void)
   HAL_ADC_Init(&hadc1);
 
 
-  trans_recep_init(&t_r_red, &huart1);
+  trans_recep_init(&t_r_red, &huart4);
 
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
   int dip_value = get_dip_value(&this_dip);
@@ -258,7 +258,7 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 	}
 
 	// Modo SLAVE
-	if(huart->Instance == USART1)
+	if(huart->Instance == UART4)
 	{
 		if (device_mode == MASTER)
 		{
@@ -285,13 +285,13 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 	}
 
 	HAL_UART_Receive_IT(&huart2, &uart_pc, 1);
-	HAL_UART_Receive_IT(&huart1, &uart_red, 1);
+	HAL_UART_Receive_IT(&huart4, &uart_red, 1);
 }
 
 
 /*void HAL_UART_TxCpltCallback (UART_HandleTypeDef *huart)
 {
-	HAL_UART_Transmit_IT(&huart1, &uart_red, 1);
+	HAL_UART_Transmit_IT(&huart4, &uart_red, 1);
 }*/
 
 

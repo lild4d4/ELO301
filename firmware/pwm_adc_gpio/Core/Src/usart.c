@@ -48,7 +48,7 @@ void MX_UART4_Init(void)
   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
   huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
+  if (HAL_RS485Ex_Init(&huart4, UART_DE_POLARITY_HIGH, 0, 0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -116,8 +116,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     /**UART4 GPIO Configuration
     PA0     ------> UART4_TX
     PA1     ------> UART4_RX
+    PA15 (JTDI)     ------> UART4_DE
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_15;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -181,8 +182,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     /**UART4 GPIO Configuration
     PA0     ------> UART4_TX
     PA1     ------> UART4_RX
+    PA15 (JTDI)     ------> UART4_DE
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_15);
 
   /* USER CODE BEGIN UART4_MspDeInit 1 */
 
