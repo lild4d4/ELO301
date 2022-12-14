@@ -166,6 +166,7 @@ int main(void)
   int dip_value = get_dip_value(&this_dip);
   device_if_init(&this_device, dip_value);
 
+  led_set(&this_led, 1960);
 
   while (1)
   {
