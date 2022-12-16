@@ -167,7 +167,17 @@ int main(void)
   device_if_init(&this_device, dip_value);
 
   led_set(&this_led, 1960);
+  HAL_Delay(200);
+  led_set(&this_led, 0);
+  HAL_Delay(200);
+  led_set(&this_led, 400);
+  HAL_Delay(200);
+  led_set(&this_led, 0);
+  HAL_Delay(200);
 
+  led_set(&this_led, 1960);
+
+  HAL_GPIO_WritePin(GPIOA, EN_Pin, 0);
   while (1)
   {
     /* USER CODE END WHILE */

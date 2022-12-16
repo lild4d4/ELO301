@@ -1,5 +1,5 @@
-Core/Src/transmisor_receptor_red.o: ../Core/Src/transmisor_receptor_red.c \
- ../Core/Inc/transmisor_receptor_red.h ../Core/Inc/usart.h \
+middlewares/Src/dip_switch.o: ../middlewares/Src/dip_switch.c \
+ ../middlewares/Inc/dip_switch.h ../Core/Inc/gpio_if.h ../Core/Inc/gpio.h \
  ../Core/Inc/main.h ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -33,8 +33,9 @@ Core/Src/transmisor_receptor_red.o: ../Core/Src/transmisor_receptor_red.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
-../Core/Inc/transmisor_receptor_red.h:
-../Core/Inc/usart.h:
+../middlewares/Inc/dip_switch.h:
+../Core/Inc/gpio_if.h:
+../Core/Inc/gpio.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:

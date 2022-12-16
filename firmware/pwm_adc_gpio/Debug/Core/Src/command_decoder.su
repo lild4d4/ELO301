@@ -1,2 +1,0 @@
-../Core/Src/command_decoder.c:27:5:decode_pc_command	16	static
-../Core/Src/command_decoder.c:42:5:decode_red_command	32	static

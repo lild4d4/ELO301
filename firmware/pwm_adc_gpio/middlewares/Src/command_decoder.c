@@ -55,14 +55,15 @@ int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2
 			{
 				potenciometro_init(&pot, &hadc1);	// solo funciona si se realiza la inicializacion siempre, ni idea
 				uint8_t adc_val = potenciometro_get_value(&pot);
-				int cero = 0;
+				int cero = 0x00;
 				send(&t_r_red, &cero, &adc_val); //HAL_UART_Transmit(&huart1, &adc_val, 1, 1000);
 			}
 			else
 			{
 				uint16_t dc_pwm = (float)red_command_2/127 * 1960;
 				led_set(&this_led, dc_pwm);
-				HAL_UART_Transmit(&huart1, &dc_pwm, 1, 1000);
+				int response = 0xFF;
+				send(&t_r_red, &response, &response);
 			}
 		}
 		else

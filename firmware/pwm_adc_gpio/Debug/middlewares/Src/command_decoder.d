@@ -1,6 +1,7 @@
-Core/Src/dip_switch.o: ../Core/Src/dip_switch.c ../Core/Inc/dip_switch.h \
- ../Core/Inc/gpio_if.h ../Core/Inc/gpio.h ../Core/Inc/main.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
+middlewares/Src/command_decoder.o: ../middlewares/Src/command_decoder.c \
+ ../middlewares/Inc/command_decoder.h ../middlewares/Inc/device.h \
+ ../middlewares/Inc/potenciometro.h ../Core/Inc/usart.h \
+ ../Core/Inc/main.h ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h \
@@ -33,10 +34,12 @@ Core/Src/dip_switch.o: ../Core/Src/dip_switch.c ../Core/Inc/dip_switch.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- ../Core/Inc/gpio_if.h
-../Core/Inc/dip_switch.h:
-../Core/Inc/gpio_if.h:
-../Core/Inc/gpio.h:
+ ../middlewares/Inc/transmisor_receptor_red.h ../middlewares/Inc/device.h \
+ ../Core/Inc/adc.h ../Core/Inc/tim.h ../middlewares/Inc/led.h
+../middlewares/Inc/command_decoder.h:
+../middlewares/Inc/device.h:
+../middlewares/Inc/potenciometro.h:
+../Core/Inc/usart.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -71,4 +74,8 @@ Core/Src/dip_switch.o: ../Core/Src/dip_switch.c ../Core/Inc/dip_switch.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-../Core/Inc/gpio_if.h:
+../middlewares/Inc/transmisor_receptor_red.h:
+../middlewares/Inc/device.h:
+../Core/Inc/adc.h:
+../Core/Inc/tim.h:
+../middlewares/Inc/led.h:

@@ -1,0 +1,2 @@
+../middlewares/Src/dip_switch.c:12:6:dip_switch_ports_init	24	static
+../middlewares/Src/dip_switch.c:20:5:get_dip_value	24	static
