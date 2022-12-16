@@ -86,6 +86,7 @@ void decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_
 }
 
 
+// Timer que controla la ventana de espera de respuesta de la red
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {

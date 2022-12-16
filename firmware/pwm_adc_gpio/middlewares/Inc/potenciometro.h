@@ -32,6 +32,7 @@ void potenciometro_init(potenciometro *pot, ADC_HandleTypeDef *hadc1);
 /**
  * @brief Obtiene el valor del potenciómetro
  * @param pot Estructura de datos del potenciómetro
+ * @return pot_val Valor entre 0 y 100 del potenciómetro
  */
 uint8_t potenciometro_get_value(potenciometro *pot);
 
