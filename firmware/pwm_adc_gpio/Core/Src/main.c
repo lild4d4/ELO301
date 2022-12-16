@@ -49,15 +49,18 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t uart_pc;
+
+// variables periféricos/componentes
 device this_device;
 potenciometro pot;
 transmisor_receptor_red t_r_red;
 mode_types device_mode;
-uint8_t uart_red;
-static uint8_t cont_tim = 0;
-
+dip_switch this_dip;
 led this_led;
+
+// variables interrupciones UART
+uint8_t uart_pc;
+uint8_t uart_red;
 
 /* USER CODE END PV */
 
@@ -80,7 +83,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	/*pines de switches*/
+	/* pines de switches */
 	t_gpio_pin user_switch1_pin = {SW1_GPIO_Port, SW1_Pin};
 	t_gpio_if switch_1;
 	t_gpio_pin user_switch2_pin = {SW2_GPIO_Port, SW2_Pin};
@@ -89,12 +92,6 @@ int main(void)
 	t_gpio_if switch_3;
 	t_gpio_pin user_switch4_pin = {SW4_GPIO_Port, SW4_Pin};
 	t_gpio_if switch_4;
-
-	/*Device*/
-	//device this_device;
-
-	/*Dip Switch*/
-	dip_switch this_dip;
 
   /* USER CODE END 1 */
 
@@ -128,14 +125,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  // Inicialización interrupciones por UART
+  HAL_UART_Receive_IT(&huart1, &uart_red, 1);
+  HAL_UART_Receive_IT(&huart2, &uart_pc, 1);
 
-
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);			// inicializacion pwm'
-  led_init(&this_led, &htim1);
-
-  HAL_UART_Receive_IT(&huart2, &uart_pc, 1);		// inicializacion interrupciones UART2
-  HAL_UART_Receive_IT(&huart1, &uart_red, 1);		// inicializacion interrupciones UART1
-
+  // Inicialización periféricos GPIO para el DIP switch
   gpio_if_init(&switch_1, ACTIVE_HIGH, &user_switch1_pin, GPIO_IF_INPUT);
   if (gpio_if_open(&switch_1) != GPIO_IF_SUCCESS)
     {
@@ -157,15 +151,19 @@ int main(void)
       Error_Handler();
     }
 
-  HAL_ADC_Init(&hadc1);
-
-
+  // Inicialización transceptor
   trans_recep_init(&t_r_red, &huart1);
 
+  // Inicialización datos de dispositivo según valor del DIP switch
   dip_switch_ports_init(&this_dip, &switch_1, &switch_2, &switch_3, &switch_4);
   int dip_value = get_dip_value(&this_dip);
   device_if_init(&this_device, dip_value);
 
+  // Inicialización de LED (PWM) y potenciómetro (ADC)
+  led_init(&this_led, &htim1);
+  potenciometro_init(&pot, &hadc1);
+
+  // Breve animación LED de inicio
   led_set(&this_led, 1960);
   HAL_Delay(200);
   led_set(&this_led, 0);
@@ -174,10 +172,8 @@ int main(void)
   HAL_Delay(200);
   led_set(&this_led, 0);
   HAL_Delay(200);
-
   led_set(&this_led, 1960);
 
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, 0);
   while (1)
   {
     /* USER CODE END WHILE */
@@ -238,7 +234,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-// rutina de interrupcion por UART
+// Rutina de interrupción por UART
 uint8_t dato_1;
 uint8_t dato_2;
 
@@ -247,8 +243,7 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 	static uint8_t cont = 1;
 	device_mode = this_device.modo;
 
-
-	// Modo MASTER
+	// UART del computador
 	if(huart->Instance == USART2)
 	{
 		if (cont == 1)
@@ -262,12 +257,12 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 			cont = 1;
 			if (device_mode == MASTER)
 			{
-				int command = decode_pc_command(&this_device, dato_1, dato_2);
+				decode_pc_command(&this_device, dato_1, dato_2);
 			}
 		}
 	}
 
-	// Modo SLAVE
+	// UART de la red
 	if(huart->Instance == USART1)
 	{
 		if (device_mode == MASTER)
@@ -288,34 +283,15 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 				cont = 1;
 				if (device_mode == SLAVE)
 				{
-					int command = decode_red_command(&this_device, dato_1, dato_2);
+					decode_red_command(&this_device, dato_1, dato_2);
 				}
 			}
 		}
 	}
 
+	// Reactivar interrupciones UART
 	HAL_UART_Receive_IT(&huart2, &uart_pc, 1);
 	HAL_UART_Receive_IT(&huart1, &uart_red, 1);
-}
-
-
-/*void HAL_UART_TxCpltCallback (UART_HandleTypeDef *huart)
-{
-	HAL_UART_Transmit_IT(&huart1, &uart_red, 1);
-}*/
-
-
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	if (cont_tim == 1) {
-		HAL_UART_Transmit(&huart2, '1', 1, 100);
-		HAL_TIM_Base_Stop_IT(&htim2);
-	}
-	else
-	{
-		cont_tim = 1;
-	}
 }
 
 /* USER CODE END 4 */

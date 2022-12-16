@@ -15,8 +15,9 @@
 #include "led.h"
 
 /*- COMANDOS ---------------------------------------------------------*/
-#define READ_POT 1;
-#define WRITE_LED 2;
+
+#define READ_POT	0
+#define WRITE_LED	1
 
 extern uint8_t uart_red;
 extern transmisor_receptor_red t_r_red;
@@ -24,77 +25,84 @@ extern led this_led;
 extern potenciometro pot;
 uint8_t counter;
 
-int decode_pc_command(device *dev, uint8_t command_1, uint8_t command_2)
+void decode_pc_command(device *dev, uint8_t command_1, uint8_t command_2)
 {
-
 	if(dev->modo==SLAVE)
 	{
-		return -1;
+		// nada
 	}
 	else
 	{
+		// Enviar comandos del PC a la red
 		send(&t_r_red, &command_1, &command_2);
+
+		// Activa el timer del timeout (5 segundos)
  		HAL_TIM_Base_Start_IT(&htim2);
-		return 0;
 	}
 }
 
-int decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2)
+void decode_red_command(device *dev, uint8_t red_command_1, uint8_t red_command_2)
 {
 	if(dev->modo==MASTER)
 	{
-		HAL_UART_Transmit(&huart1, &red_command_1, 1, 1000);
-		HAL_UART_Transmit(&huart1, &red_command_2, 1, 1000);
+		// Si por alguna razón el MASTER recibe estos comandos, los reenvía a la red
+		send(&t_r_red, &red_command_1, &red_command_2);
 	}
 	else
 	{
-		// chequear si es el ID correcto
+		/* Chequear si es el ID correcto:
+		 * "red_command_1" contiene el ID del dispositivo en los 4 bits menos significativos
+		 */
 		if( (0b00001111 & red_command_1) == dev->id )
 		{
-			if(red_command_1>>7 == 0 )
+			int instruccion = red_command_1>>7;
+
+			// Leer valor del potenciómetro
+			if(instruccion == READ_POT)
 			{
-				potenciometro_init(&pot, &hadc1);	// solo funciona si se realiza la inicializacion siempre, ni idea
 				uint8_t adc_val = potenciometro_get_value(&pot);
+
+				// Retornar valor potenciómetro por UART hacia la red
 				int cero = 0x00;
-				send(&t_r_red, &cero, &adc_val); //HAL_UART_Transmit(&huart1, &adc_val, 1, 1000);
+				send(&t_r_red, &cero, &adc_val);
 			}
-			else
+
+			// Setear brillo de LED
+			else if (instruccion == WRITE_LED)
 			{
 				uint16_t dc_pwm = (float)red_command_2/127 * 1960;
 				led_set(&this_led, dc_pwm);
+
+				// Retornar xFF xFF por UART hacia la red (interpretado como un OK)
 				int response = 0xFF;
 				send(&t_r_red, &response, &response);
 			}
 		}
 		else
 		{
-			return 0;
+			// nada
 		}
 	}
 }
 
 
 
-/* https://visualgdb.com/tutorials/arm/stm32/timers/hal/ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	/* Variable usada para arreglar un bug donde la -primera- vez que se activan las
+	 * interrupciones de timer, ocurre una interrupción inmediatamente. */
+	static uint8_t cont_tim = 0;
 
-
-
-/* 		HAL_TIM_Base_Start_IT(&htim2);
-
-		while (counter < 20)
-		{
-			if ()
-			{
-				//
-				break;
-			}
-
-			if (__HAL_TIM_GET_FLAG(&htim2, TIM_FLAG_UPDATE) == SET)
-			{
-				__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
-				counter++;
-			}
-
-		}
+	if (cont_tim == 1) {
+		// Enviar '1' al computador cuando ocurre timeout después de 5 segundos (no hay respuesta de la red)
+		HAL_UART_Transmit(&huart2, &cont_tim, 1, 100);
 		HAL_TIM_Base_Stop_IT(&htim2);
-*/
+	}
+	else
+	{
+		cont_tim = 1;
+	}
+}
+
+
+/* https://visualgdb.com/tutorials/arm/stm32/timers/hal/ */

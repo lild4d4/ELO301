@@ -1,2 +1,2 @@
 ../middlewares/Src/potenciometro.c:10:6:potenciometro_init	16	static
-../middlewares/Src/potenciometro.c:16:9:potenciometro_get_value	24	static
+../middlewares/Src/potenciometro.c:15:9:potenciometro_get_value	24	static

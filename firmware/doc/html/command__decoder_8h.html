@@ -105,24 +105,24 @@ $(document).ready(function(){initNavTree('command__decoder_8h.html',''); initRes
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2c6d319e29b22ad3e6c746b4dcda83a2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="command__decoder_8h.html#a2c6d319e29b22ad3e6c746b4dcda83a2">decode_pc_command</a> (<a class="el" href="structdevice.html">device</a> *dev, uint8_t pc_command_1, uint8_t pc_command_2)</td></tr>
-<tr class="memdesc:a2c6d319e29b22ad3e6c746b4dcda83a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decodifica el comando que recibe el dispositivo MASTER desde el PC.  <a href="command__decoder_8h.html#a2c6d319e29b22ad3e6c746b4dcda83a2">More...</a><br /></td></tr>
-<tr class="separator:a2c6d319e29b22ad3e6c746b4dcda83a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5974e70f3c850502e6e888f09798ed53"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="command__decoder_8h.html#a5974e70f3c850502e6e888f09798ed53">decode_red_command</a> (<a class="el" href="structdevice.html">device</a> *dev, uint8_t red_command_1, uint8_t red_command_2)</td></tr>
-<tr class="memdesc:a5974e70f3c850502e6e888f09798ed53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decodifica el comando que recibe el dispositivo SLAVE desde la red.  <a href="command__decoder_8h.html#a5974e70f3c850502e6e888f09798ed53">More...</a><br /></td></tr>
-<tr class="separator:a5974e70f3c850502e6e888f09798ed53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fe3a26b9c0fa9f665333a1ea2c8e31b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="command__decoder_8h.html#a5fe3a26b9c0fa9f665333a1ea2c8e31b">decode_pc_command</a> (<a class="el" href="structdevice.html">device</a> *dev, uint8_t pc_command_1, uint8_t pc_command_2)</td></tr>
+<tr class="memdesc:a5fe3a26b9c0fa9f665333a1ea2c8e31b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decodifica el comando que recibe el dispositivo MASTER desde el PC.  <a href="command__decoder_8h.html#a5fe3a26b9c0fa9f665333a1ea2c8e31b">More...</a><br /></td></tr>
+<tr class="separator:a5fe3a26b9c0fa9f665333a1ea2c8e31b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5964d2cc585618a52c5f55308e671050"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="command__decoder_8h.html#a5964d2cc585618a52c5f55308e671050">decode_red_command</a> (<a class="el" href="structdevice.html">device</a> *dev, uint8_t red_command_1, uint8_t red_command_2)</td></tr>
+<tr class="memdesc:a5964d2cc585618a52c5f55308e671050"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decodifica el comando que recibe el dispositivo SLAVE desde la red.  <a href="command__decoder_8h.html#a5964d2cc585618a52c5f55308e671050">More...</a><br /></td></tr>
+<tr class="separator:a5964d2cc585618a52c5f55308e671050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Created on: Dec 5, 2022 Author: Grupo8 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a2c6d319e29b22ad3e6c746b4dcda83a2" name="a2c6d319e29b22ad3e6c746b4dcda83a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c6d319e29b22ad3e6c746b4dcda83a2">&#9670;&#160;</a></span>decode_pc_command()</h2>
+<a id="a5fe3a26b9c0fa9f665333a1ea2c8e31b" name="a5fe3a26b9c0fa9f665333a1ea2c8e31b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fe3a26b9c0fa9f665333a1ea2c8e31b">&#9670;&#160;</a></span>decode_pc_command()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int decode_pc_command </td>
+          <td class="memname">void decode_pc_command </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structdevice.html">device</a> *&#160;</td>
           <td class="paramname"><em>dev</em>, </td>
@@ -156,18 +156,17 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>-1 si falla, 0 si resulta </dd></dl>
 
 </div>
 </div>
-<a id="a5974e70f3c850502e6e888f09798ed53" name="a5974e70f3c850502e6e888f09798ed53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5974e70f3c850502e6e888f09798ed53">&#9670;&#160;</a></span>decode_red_command()</h2>
+<a id="a5964d2cc585618a52c5f55308e671050" name="a5964d2cc585618a52c5f55308e671050"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5964d2cc585618a52c5f55308e671050">&#9670;&#160;</a></span>decode_red_command()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int decode_red_command </td>
+          <td class="memname">void decode_red_command </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structdevice.html">device</a> *&#160;</td>
           <td class="paramname"><em>dev</em>, </td>
@@ -196,12 +195,11 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dev</td><td>Dispositivo que recibe el comando de la red </td></tr>
-    <tr><td class="paramname">pc_command_1</td><td>Primera mitad del comando recibido </td></tr>
-    <tr><td class="paramname">pc_command_2</td><td>Segunda mitad del comando recibido </td></tr>
+    <tr><td class="paramname">red_command_1</td><td>Primera mitad del comando recibido </td></tr>
+    <tr><td class="paramname">red_command_2</td><td>Segunda mitad del comando recibido </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>0 si resulta </dd></dl>
 
 </div>
 </div>

@@ -1,2 +1,2 @@
 ../middlewares/Src/transmisor_receptor_red.c:12:6:trans_recep_init	16	static
-../middlewares/Src/transmisor_receptor_red.c:17:6:send	24	static
+../middlewares/Src/transmisor_receptor_red.c:19:6:send	24	static
